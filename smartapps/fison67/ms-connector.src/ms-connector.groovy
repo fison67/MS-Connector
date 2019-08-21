@@ -1,5 +1,5 @@
 /**
- *  MS Connector (v.0.0.1)
+ *  MS Connector (v.0.0.2)
  *
  * MIT License
  *
@@ -89,20 +89,50 @@ def initialize() {
     addDevice()
 }
 
+def existChild(dni){
+	def result = false
+	def list = getChildDevices()
+    list.each { child ->
+        if(child.getDeviceNetworkId() == dni){
+        	result = true
+        }
+    }
+    return result
+}
+
 def addDevice(){
-	
-    def list = getChildDevices();
-    if(list.size() > 0){
-    	return
+    
+    if(!existChild("ms-connector-kakaotalk")){
+        try{
+            def childDevice = addChildDevice("fison67", "MS Messenger KakaoTalk", "ms-connector-kakaotalk", location.hubs[0].id, [
+                "label": "MS Messenger KakaoTalk"
+            ])    
+            childDevice.setInfo(settings.address)
+        }catch(err){
+            log.error err
+        }
     }
     
-    try{
-        def childDevice = addChildDevice("fison67", "Messenger", "ms-connector-messenger", location.hubs[0].id, [
-            "label": "Messenger"
-        ])    
-        childDevice.setInfo(settings.address)
-    }catch(err){
-        log.error err
+    if(!existChild("ms-connector-telegram")){
+        try{
+            def childDevice = addChildDevice("fison67", "MS Messenger Telegram", "ms-connector-telegram", location.hubs[0].id, [
+                "label": "MS Messenger Telegram"
+            ])    
+            childDevice.setInfo(settings.address)
+        }catch(err){
+            log.error err
+        }
+    }
+    
+    if(!existChild("ms-connector-line")){
+        try{
+            def childDevice = addChildDevice("fison67", "MS Messenger Line", "ms-connector-line", location.hubs[0].id, [
+                "label": "MS Messenger Line"
+            ])    
+            childDevice.setInfo(settings.address)
+        }catch(err){
+            log.error err
+        }
     }
 }
 
