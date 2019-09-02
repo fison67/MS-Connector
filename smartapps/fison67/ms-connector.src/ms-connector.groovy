@@ -136,12 +136,5 @@ def addDevice(){
     }
 }
 
-def authError() {
-    [error: "Permission denied"]
-}
-
 mappings {
-    if (!params.access_token || (params.access_token && params.access_token != state.accessToken)) {
-    } else {
-    }
 }
