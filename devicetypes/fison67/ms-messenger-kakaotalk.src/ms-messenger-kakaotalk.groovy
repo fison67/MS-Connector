@@ -32,18 +32,7 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "MS Messenger KakaoTalk", namespace: "fison67", author: "fison67") {
         capability "Speech Synthesis"
-         
 	}
-
-	simulator {}
-
-	tiles {
-    	multiAttributeTile(name:"status", type: "generic", width: 6, height: 4, canChangeIcon: true){
-			tileAttribute ("device.status", key: "PRIMARY_CONTROL") {
-				attributeState("status", label:'${currentValue}', backgroundColor:"#00a0dc")
-			}
-		}
-    }
 }
 
 // parse events into attributes
@@ -65,7 +54,7 @@ def updated() {}
 
 def sendCommand(options, _callback){
 	log.debug options
-	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
+	def myhubAction = new hubitat.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
 
