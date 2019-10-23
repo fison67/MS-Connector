@@ -1,5 +1,5 @@
 /**
- *  MS Messenger KakaoTalk (v.0.0.1)
+ *  Messenger (v.0.0.2)
  *
  * MIT License
  *
@@ -32,7 +32,7 @@ import groovy.json.JsonSlurper
 metadata {
 	definition (name: "MS Messenger KakaoTalk", namespace: "fison67", author: "fison67") {
         capability "Speech Synthesis"
-         
+        capability "Actuator"
 	}
 
 	simulator {}
