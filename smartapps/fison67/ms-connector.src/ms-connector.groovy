@@ -1,5 +1,5 @@
 /**
- *  MS Connector (v.0.0.2)
+ *  MS Connector (v.0.0.3)
  *
  * MIT License
  *
@@ -51,7 +51,7 @@ preferences {
 def mainPage() {
 	 dynamicPage(name: "mainPage", title: "Messenger Connector", nextPage: null, uninstall: true, install: true) {
    		section("Request New Devices"){
-        	input "address", "string", title: "Server address", required: true, description:"IP:Port. ex)192.168.0.100:30200"
+        	input "address", "text", title: "Server address", required: true, description:"IP:Port. ex)192.168.0.100:30200"
         }
         
     }
