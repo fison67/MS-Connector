@@ -1,5 +1,5 @@
 /**
- *  Line Messenger (v.0.0.2)
+ *  Line Messenger (v.0.0.3)
  *
  * MIT License
  *
@@ -28,11 +28,14 @@
 */
  
 import groovy.json.JsonSlurper
+import org.apache.commons.codec.binary.Base64
 
 metadata {
 	definition (name: "MS Messenger Line", namespace: "fison67", author: "fison67") {
         capability "Speech Synthesis"
         capability "Actuator"
+        
+        command "sendMessage", ["string", "string"]
 	}
 
 	simulator {}
@@ -61,10 +64,14 @@ def speak(text){
 	sendCommand(makeCommand( ["data":text] ), null)
 }
 
+def sendMessage(text, imageURL){
+	log.debug "Speak :" + text + ", IMG: " + imageURL
+	sendCommand(makeCommand( ["data":text, "info": ["img":encodeAC(imageURL)]] ), null)
+}
+
 def updated() {}
 
 def sendCommand(options, _callback){
-	log.debug options
 	def myhubAction = new physicalgraph.device.HubAction(options, null, [callback: _callback])
     sendHubCommand(myhubAction)
 }
@@ -80,4 +87,12 @@ def makeCommand(body){
         "body":body
     ]
     return options
+}
+
+/**
+* Base64 Encode a String using Apache commons
+*/
+def encodeAC(arg){
+    Base64 coder = new Base64()
+    return new String(coder.encodeBase64(arg.getBytes("utf-8"), false), "utf-8")
 }
