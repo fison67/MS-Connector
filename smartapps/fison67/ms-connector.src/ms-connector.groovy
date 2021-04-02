@@ -1,5 +1,5 @@
 /**
- *  MS Connector (v.0.0.3)
+ *  MS Connector (v.0.0.4)
  *
  * MIT License
  *
@@ -49,10 +49,21 @@ preferences {
 
 
 def mainPage() {
+	if(location.hubs.size() < 1) {
+        section() {
+            paragraph "[ERROR]\nSmartThings Hub not found.\nYou need a SmartThings Hub to use MS-Connector."
+        }
+        return
+    }
 	 dynamicPage(name: "mainPage", title: "Messenger Connector", nextPage: null, uninstall: true, install: true) {
    		section("Request New Devices"){
         	input "address", "text", title: "Server address", required: true, description:"IP:Port. ex)192.168.0.100:30200"
         }
+        
+        section("Hub"){
+        	input "devHub", "enum", title: "Hub", required: true, multiple: false, options: getHubs()
+        }
+            
         
     }
 }
@@ -84,6 +95,10 @@ def setAPIAddress(){
     }
 }
 
+def _getServerURL(){
+     return settings.address
+}
+
 def initialize() {
 	log.debug "initialize"
     addDevice()
@@ -104,7 +119,7 @@ def addDevice(){
     
     if(!existChild("ms-connector-kakaotalk")){
         try{
-            def childDevice = addChildDevice("fison67", "MS Messenger KakaoTalk", "ms-connector-kakaotalk", location.hubs[0].id, [
+            def childDevice = addChildDevice("streamorange58819", "MS Messenger KakaoTalk", "ms-connector-kakaotalk", getLocationID(), [
                 "label": "MS Messenger KakaoTalk"
             ])    
             childDevice.setInfo(settings.address)
@@ -115,7 +130,7 @@ def addDevice(){
     
     if(!existChild("ms-connector-telegram")){
         try{
-            def childDevice = addChildDevice("fison67", "MS Messenger Telegram", "ms-connector-telegram", location.hubs[0].id, [
+            def childDevice = addChildDevice("streamorange58819", "MS Messenger Telegram", "ms-connector-telegram", getLocationID(), [
                 "label": "MS Messenger Telegram"
             ])    
             childDevice.setInfo(settings.address)
@@ -126,7 +141,7 @@ def addDevice(){
     
     if(!existChild("ms-connector-line")){
         try{
-            def childDevice = addChildDevice("fison67", "MS Messenger Line", "ms-connector-line", location.hubs[0].id, [
+            def childDevice = addChildDevice("streamorange58819", "MS Messenger Line", "ms-connector-line", getLocationID(), [
                 "label": "MS Messenger Line"
             ])    
             childDevice.setInfo(settings.address)
@@ -138,6 +153,30 @@ def addDevice(){
 
 def authError() {
     [error: "Permission denied"]
+}
+
+def getLocationID(){
+	def locationID = null
+    try{ locationID = getHubID(devHub) }catch(err){}
+    return locationID
+}
+
+def getHubs(){
+	def list = []
+    location.getHubs().each { hub ->
+    	list.push(hub.name)
+    }
+    return list
+}
+
+def getHubID(name){
+	def id = null
+    location.getHubs().each { hub ->
+    	if(hub.name == name){
+        	id = hub.id
+        }
+    }
+    return id
 }
 
 mappings {
